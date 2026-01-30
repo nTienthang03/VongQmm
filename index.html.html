@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vòng Quay May Mắn Online - Vongquaymayman.co</title>
+  <meta name="description" content="Vongquaymayman.co - Vòng quay may mắn online miễn phí, ngẫu nhiên, công bằng. Tạo vòng quay tùy chỉnh, bốc thăm trúng thưởng dễ dàng."/>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    :root {
+      /* White - Pink theme */
+      --red: #ff6f9b;        /* soft pink for headers */
+      --red-dark: #e05584;   /* darker pink for footer */
+      --pink-red: #ff4d8a;   /* accent pink buttons */
+      --deep-red: #d03a67;   /* deeper pink for borders/shadows */
+      --gold: #ffd700;
+      --gold-dark: #ffca28;
+      --bg-light: #fff5f8;   /* very light pink background */
+      --light-pink: #fff0f6; /* subtle pink highlights */
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(to bottom, var(--bg-light), #fff3f5);
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* === PHẦN VÒNG QUAY (ĐẶT Ở TRÊN) === */
+    header.wheel-header {
+      background: var(--pink-red);
+      color: white;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 15px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 1.7rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    nav button {
+      background: rgba(255,255,255,0.18);
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: 0.2s;
+    }
+
+    nav button:hover { background: rgba(255,255,255,0.35); }
+
+    .main-container {
+      max-width: 1450px;
+      margin: 20px auto;
+      padding: 0 20px;
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .wheel-section {
+      flex: 1;
+      min-width: 550px;
+      position: relative;
+      /* simplified soft background so wheel stands out */
+      background: linear-gradient(135deg, #fff8fb 0%, #fffaf2 100%);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 12px 50px rgba(0,0,0,0.08);
+      padding: 28px;
+    }
+
+    .wheel-container {
+      position: relative;
+      width: 100%;
+      padding-top: 100%;
+    }
+
+    .wheel {
+      position: absolute;
+      inset: 50px;
+      background: none; /* set by JS to conic-gradient runtime */
+      border-radius: 50%;
+      border: 14px solid var(--deep-red);
+      box-shadow: inset 0 0 60px rgba(0,0,0,0.5), 0 0 30px rgba(216,27,96,0.6);
+    }
+    .wheel { transform-origin: 50% 50%; }
+
+    .pointer {
+      display: none !important; /* pointer removed as requested */
+    }
+
+    /* pointer announce (when wheel stops) */
+    .pointer.announce {
+      animation: pointer-bounce 620ms ease forwards;
+      filter: drop-shadow(0 10px 30px rgba(255,215,0,0.7)) brightness(1.05);
+    }
+    @keyframes pointer-bounce{
+      0%{ transform: translateX(-50%) translateY(0) rotate(0deg); }
+      40%{ transform: translateX(-50%) translateY(-8px) rotate(-6deg); }
+      70%{ transform: translateX(-50%) translateY(2px) rotate(4deg); }
+      100%{ transform: translateX(-50%) translateY(0) rotate(0deg); }
+    }
+
+    .center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+    }
+
+    .center-inner {
+      width: 160px;
+      height: 160px;
+      background: var(--gold);
+      border-radius: 50%;
+      border: 12px solid white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--deep-red);
+      text-align: center;
+      box-shadow: 0 0 30px rgba(255,202,40,0.8);
+    }
+
+    .sidebar {
+      width: 400px;
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    }
+
+    .sidebar-header {
+      background: var(--pink-red);
+      color: white;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.1rem;
+    }
+
+    .toolbar {
+      padding: 12px 16px;
+      background: #fafafa;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.92rem;
+      transition: 0.2s;
+    }
+
+    .btn-primary { background: var(--pink-red); color: white; border: none; }
+    .btn-primary:hover { background: #c2185b; }
+    .btn-secondary { background: #e0e0e0; border: none; }
+    .btn-secondary:hover { background: #d0d0d0; }
+
+    .list {
+      max-height: 520px;
+      overflow-y: auto;
+      padding: 0 4px;
+    }
+
+    .item {
+      padding: 12px 20px;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 1.08rem;
+      color: #444;
+    }
+
+    .excel-area {
+      padding: 16px;
+      border-top: 1px solid #ddd;
+      background: #f9f9f9;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* === PHẦN GIỚI THIỆU (ĐẶT Ở DƯỚI) === */
+    .intro-container {
+      max-width: 1100px;
+      margin: 4rem auto;
+      padding: 0 5%;
+    }
+
+    .intro-header {
+      background: var(--red);
+      color: white;
+      padding: 2.5rem 5%;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      margin-bottom: 3rem;
+    }
+
+    .intro-header h1 {
+      font-size: 2.6rem;
+      margin-bottom: 0.6rem;
+    }
+
+    h2 {
+      color: var(--red);
+      border-bottom: 3px solid var(--gold);
+      padding-bottom: 0.6rem;
+      margin-bottom: 1.2rem;
+      font-size: 1.9rem;
+    }
+
+    ul.features {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.2rem;
+    }
+
+    ul.features li {
+      background: white;
+      padding: 1.3rem;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    }
+
+    ul.features li strong { color: var(--red); }
+
+    .applications {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .faq details {
+      margin-bottom: 1rem;
+      background: #f9f9f9;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .faq summary {
+      padding: 1rem 1.5rem;
+      background: var(--red);
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .faq p {
+      padding: 1rem 1.5rem;
+    }
+
+    .cta {
+      text-align: center;
+      margin: 3rem 0;
+    }
+
+    .btn-large {
+      display: inline-block;
+      padding: 1.2rem 2.8rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.3rem;
+      transition: all 0.3s;
+    }
+
+    .btn-gold {
+      background: var(--gold);
+      color: #333;
+      box-shadow: 0 4px 12px rgba(255,215,0,0.4);
+    }
+
+    .btn-gold:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(255,215,0,0.5);
+    }
+
+    footer {
+      background: var(--red-dark);
+      color: white;
+      text-align: center;
+      padding: 2.5rem 1rem;
+      margin-top: 5rem;
+    }
+
+    .decor, .decor-flower {
+      position: fixed;
+      font-size: 4.5rem;
+      opacity: 0.07;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    @media (max-width: 1000px) {
+      .main-container { flex-direction: column; }
+      .sidebar { width: 100%; max-width: 500px; margin: 20px auto; }
+    }
+
+    @media (max-width: 768px) {
+      .intro-header h1 { font-size: 2.2rem; }
+    }
+    .wheel.split {
+      transform: scale(1.02);
+      transition: transform 220ms ease;
+    }
+
+    .wheel.spin-transition {
+      transition: transform 4s cubic-bezier(.12,.9,.28,1);
+    }
+    .wheel.announce-glow { box-shadow: 0 0 60px rgba(255,215,0,0.45), 0 0 120px rgba(255,215,0,0.12) !important; transform: scale(1.01); }
+    .labels { position:absolute; inset:0; pointer-events:none; }
+    .sector-label {
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: white;
+      background: transparent; /* no badge */
+      padding: 0;
+      border-radius: 0;
+      white-space: normal; /* allow multi-line if needed */
+      transform-origin: center center;
+      text-align: center;
+      pointer-events: none;
+      overflow: visible;
+      font-weight: 800;
+      text-shadow: 0 3px 10px rgba(0,0,0,0.6);
+      transition: transform 250ms ease, opacity 250ms ease, font-size 250ms ease, width 250ms ease;
+      opacity: 0.95;
+      line-height: 1.05;
+    }
+
+    /* When wheel shows split state, make labels more readable and slightly popped-out */
+    .wheel.split .sector-label {
+      opacity: 1;
+    }
+    #resultBanner div { transition: transform 160ms ease; }
+    /* Fullscreen result modal */
+    .modal-backdrop{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      backdrop-filter: blur(4px);
+    }
+    .modal-card{
+      background: white;
+      padding: 26px 28px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.35);
+      max-width: 420px;
+      width: 90%;
+    }
+    .modal-card h3{ margin:0 0 8px 0; color:#e91e63; }
+    .modal-winner{ font-size:2.8rem; font-weight:800; margin:8px 0; }
+    .modal-controls{ display:flex; gap:12px; justify-content:center; margin-top:14px; }
+    .modal-controls button{ padding:10px 14px; border-radius:8px; border:none; cursor:pointer; font-weight:700; }
+    .btn-remove{ background:#ff4d4f; color:white; }
+    .btn-close{ background:#e0e0e0; color:#222; }
+  </style>
+</head>
+<body>
+
+  <!-- ===================== PHẦN VÒNG QUAY – ĐẶT Ở TRÊN ===================== -->
+  <header class="wheel-header">
+    <div class="logo">
+      <i class="fas fa-dice-d6 fa-spin"></i> VÒNG QUAY MAY MẮN
+    </div>
+    <nav>
+      <button>Chủ đề</button>
+      <button>Làm mới</button>
+      <button>Chia sẻ</button>
+      <button>Tài khoản PRO ▼</button>
+      <button>Cài đặt</button>
+      <button>Gọn gàng</button>
+      <button><i class="fas fa-download"></i></button>
+      <button><i class="fas fa-search"></i></button>
+      <button><i class="fas fa-ellipsis-v"></i></button>
+    </nav>
+  </header>
+
+  <div class="main-container">
+    <div class="wheel-section">
+      <div class="pointer"></div>
+      <div class="wheel-container">
+        <div class="wheel"></div>
+        <!-- labels overlay will be created dynamically inside .wheel by JS -->
+        <div class="center">
+          <div class="center-inner">
+            <i class="fas fa-gift" style="font-size:2.2rem; margin-bottom:6px;"></i>
+            <div id="centerTitle">Tết</div>
+            <small id="centerSubtitle">Ngập Tràn</small>
+          </div>
+          <!-- result banner shown after spin -->
+          <div id="resultBanner" style="display:none; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; z-index:20; pointer-events:auto;">
+            <div style="background:rgba(0,0,0,0.7); color:white; padding:18px 26px; border-radius:12px; font-size:1.25rem; text-align:center; cursor:pointer;">
+              <div id="resultName">Người trúng</div>
+              <div style="font-size:0.85rem; opacity:0.9; margin-top:6px">(nhấn để đóng)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <div>Mục <strong id="countTotal">16</strong></div>
+        <div>Kết quả <strong id="countResult">4</strong></div>
+      </div>
+      <div class="toolbar">
+        <div class="panel-list" style="display:flex; gap:8px; align-items:center;">
+          <button class="btn btn-primary" id="shuffleBtn"><i class="fas fa-random"></i> Trộn</button>
+          <button class="btn btn-primary" id="sortBtn"><i class="fas fa-sort-alpha-down"></i> A-Z</button>
+          <button class="btn btn-secondary"><i class="fas fa-image"></i> Thêm ảnh</button>
+          <button class="btn btn-secondary" id="deleteBtn"><i class="fas fa-trash-alt"></i> Xoá</button>
+        </div>
+        <label style="display:flex; align-items:center; gap:6px; font-size:0.95rem; margin-left:8px;">
+          <input type="checkbox"/> Nâng cao
+        </label>
+        <div class="panel-controls" style="margin-left:auto; display:flex; gap:8px; align-items:center;">
+          <input id="memberInput" placeholder="Nhập tên thành viên" style="padding:8px 10px; border-radius:6px; border:1px solid #ddd; min-width:140px;" />
+          <button class="btn btn-primary" id="addMemberBtn">Thêm</button>
+          <label style="display:flex; align-items:center; gap:6px; font-size:0.95rem;">
+            <span style="font-size:0.9rem; color:#666;">Thời gian (s)</span>
+            <input id="spinSeconds" type="number" min="1" max="15" step="0.5" value="4" style="width:64px; padding:6px 8px; border-radius:6px; border:1px solid #ddd; text-align:center;" />
+          </label>
+          <button class="btn btn-gold" id="spinBtn" style="background:var(--gold); color:#222; border:none;"><i class="fas fa-play"></i> Quay</button>
+        </div>
+      </div>
+      <div class="list">
+        <div class="item">Phong</div>
+        <div class="item">Lan</div>
+        <div class="item">Hương</div>
+        <div class="item">Hoa</div>
+        <div class="item">Mai</div>
+        <div class="item">Ngọc</div>
+        <div class="item">Hà</div>
+        <div class="item">Sơn</div>
+        <div class="item">Thống</div>
+        <div class="item">Tuấn</div>
+        <div class="item">Thành</div>
+        <div class="item">Trang</div>
+        <div class="item">Giáng</div>
+        <div class="item">Tuyền</div>
+        <div class="item">Linh</div>
+        <div class="item">Trâm</div>
+      </div>
+      <div class="excel-area">
+        <button class="btn btn-primary"><i class="fas fa-file-excel"></i> Nhập Excel ↑</button>
+        <button class="btn btn-secondary"><i class="fas fa-download"></i> Tải mẫu Excel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== PHẦN GIỚI THIỆU – ĐẶT Ở DƯỚI ===================== -->
+  <div class="intro-container">
+
+    <header class="intro-header">
+      <h1>VÒNG QUAY MAY MẮN ONLINE</h1>
+      <p style="font-size:1.4rem; margin:1rem 0;">Trải nghiệm ngẫu nhiên, thú vị và công bằng</p>
+      <p style="font-size:1.5rem; font-weight:bold;">vongquaymayman.co</p>
+    </header>
+
+    <section>
+      <h2>Giới thiệu về vongquaymayman.co</h2>
+      <p><strong>Vongquaymayman.co</strong> là nền tảng vòng quay may mắn online <strong>MIỄN PHÍ</strong> dành cho người Việt, được phát triển bởi một lập trình viên Việt Nam.</p>
+      <p>Chúng tôi mang đến công cụ tạo vòng quay ngẫu nhiên mạnh mẽ, linh hoạt – không cần cài đặt, không giới hạn số lượng, cam kết <strong>minh bạch – ngẫu nhiên – công bằng tuyệt đối</strong>.</p>
+    </section>
+
+    <section>
+      <h2>Tính năng chính</h2>
+      <ul class="features">
+        <li><strong>Không giới hạn</strong> số lượng vòng quay</li>
+        <li>Tùy chỉnh màu sắc, âm thanh, ảnh nền, thời gian quay</li>
+        <li>Điều chỉnh <strong>trọng số / tỉ lệ trúng thưởng</strong></li>
+        <li>Tạo link chia sẻ nhanh chóng</li>
+        <li>Giới hạn lượt quay & thời gian hiệu lực</li>
+        <li>Thu thập thông tin người chơi → lưu vào Google Sheet</li>
+        <li>Tùy chỉnh CSS nâng cao</li>
+        <li>Kho chủ đề sẵn có: Trưa nay ăn gì, Bàn nhậu, Yes/No...</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Ứng dụng thực tế</h2>
+      <div class="applications">
+        <div class="card"><h3>Giáo dục</h3><p>Gọi học sinh trả lời ngẫu nhiên, quay thưởng quà...</p></div>
+        <div class="card"><h3>Giải trí & tiệc tùng</h3><p>Bốc thăm trúng thưởng, game sai khiến...</p></div>
+        <div class="card"><h3>Quyết định cá nhân</h3><p>Chọn món ăn, địa điểm du lịch...</p></div>
+        <div class="card"><h3>Marketing & Kinh doanh</h3><p>Khuyến mãi quay số nhận quà...</p></div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <a href="#wheel-section-start" class="btn-large btn-gold">Tạo vòng quay của bạn ngay →</a>
+    </section>
+
+    <section class="faq">
+      <h2>Câu hỏi thường gặp</h2>
+      <details><summary>Làm sao để tạo vòng quay?</summary><p>Nhập danh sách → tùy chỉnh → nhấn Quay. Rất đơn giản!</p></details>
+      <details><summary>Có giới hạn số lượng không?</summary><p>Không giới hạn. Tạo bao nhiêu cũng được.</p></details>
+      <details><summary>Vòng quay có công bằng không?</summary><p>Hoàn toàn ngẫu nhiên, minh bạch.</p></details>
+    </section>
+
+  </div>
+
+  <footer>
+    <p>© 2026 vongquaymayman.co – Mang niềm vui ngẫu nhiên đến mọi người</p>
+  </footer>
+
+  <!-- Decor -->
+  <div class="decor" style="top:15%; left:5%;">🎉</div>
+  <div class="decor" style="bottom:20%; right:8%;">🎁</div>
+  <div class="decor-flower" style="top:10%; right:10%;">🌸</div>
+
+  <script>
+    (function(){
+      // Reduce palette to two main colors for better focus
+      const colors = ['#ff6f9b','#ffd166'];
+      const listEl = document.querySelector('.list');
+      const wheelEl = document.querySelector('.wheel');
+      let labelsContainer = null;
+      const centerInner = document.querySelector('.center-inner');
+      const memberInput = document.getElementById('memberInput');
+      const addBtn = document.getElementById('addMemberBtn');
+      const spinBtn = document.getElementById('spinBtn');
+      const deleteBtn = document.getElementById('deleteBtn');
+      const shuffleBtn = document.getElementById('shuffleBtn');
+      const sortBtn = document.getElementById('sortBtn');
+      const pointer = document.querySelector('.pointer');
+      const spinSecondsInput = document.getElementById('spinSeconds');
+      const resultBanner = document.getElementById('resultBanner');
+      const resultNameEl = document.getElementById('resultName');
+      // create modal elements
+      const modalBackdrop = document.createElement('div'); modalBackdrop.className='modal-backdrop';
+      modalBackdrop.innerHTML = `<div class="modal-card"><h3>BẠN ĐÃ TRÚNG</h3><div class="modal-winner" id="modalWinner">---</div><div class="modal-controls"><button class="btn-remove" id="modalRemove">Xóa ô này</button><button class="btn-close" id="modalClose">Đóng</button></div></div>`;
+      document.body.appendChild(modalBackdrop);
+      const modalWinner = modalBackdrop.querySelector('#modalWinner');
+      const modalRemove = modalBackdrop.querySelector('#modalRemove');
+      const modalClose = modalBackdrop.querySelector('#modalClose');
+      const centerTitle = document.getElementById('centerTitle');
+      const centerSubtitle = document.getElementById('centerSubtitle');
+      let spinLocked = false; // prevent interactions while spinning
+      let spinsDone = 0;
+
+      // initialize members from DOM
+      let members = Array.from(listEl.querySelectorAll('.item')).map(e=>e.textContent.trim());
+
+      // buildWheel: draws sectors for given items array (defaults to global `members`)
+      function buildWheel(separated = false, items = null){
+        const list = Array.isArray(items) ? items : members;
+        const n = list.length || 1;
+        const gap = separated ? 0.8 : 0; // degrees gap between sectors
+        const seg = 360 / n;
+        let stops = [];
+        for(let i=0;i<n;i++){
+          const start = (i*seg) + (gap/2);
+          const end = ((i+1)*seg) - (gap/2);
+          const color = colors[i % colors.length];
+          stops.push(`${color} ${start}deg ${end}deg`);
+        }
+        wheelEl.style.background = `conic-gradient(${stops.join(', ')})`;
+        // after rebuilding sectors, also render labels (use same items)
+        renderLabels(list, separated);
+      }
+
+      function ensureLabelsContainer(){
+        if(!labelsContainer){
+          labelsContainer = document.createElement('div');
+          labelsContainer.className = 'labels';
+          // place labels INSIDE the rotating wheel so labels rotate with sectors
+          wheelEl.appendChild(labelsContainer);
+          // ensure overlay covers wheel area
+          labelsContainer.style.position = 'absolute';
+          labelsContainer.style.inset = '0';
+          labelsContainer.style.pointerEvents = 'none';
+        }
+      }
+        // align wheel so that the sector at `index` (0-based) sits under the pointer
+        function alignWheelToIndex(index, list = null){
+          const arr = Array.isArray(list) ? list : members;
+          const n = arr.length || 1;
+          const seg = 360 / n;
+          const targetAngle = (index * seg) + (seg/2);
+          const desired = 270 - targetAngle; // same formula used in spinToIndex
+          const final = (360 - (desired % 360)) % 360;
+          wheelEl.style.transform = `rotate(${final}deg)`;
+        }
+      // renderLabels: accurately position labels using trigonometry so they sit at sector centers
+      // items: array of labels to render; separated: whether to offset labels slightly outward
+      function renderLabels(items = null, separated = false){
+        ensureLabelsContainer();
+        labelsContainer.innerHTML = '';
+        const list = Array.isArray(items) ? items : members;
+        const n = list.length || 1;
+        const seg = 360 / n;
+
+        // Use wheel element size (avoids using rect too early)
+        const w = wheelEl.clientWidth || wheelEl.offsetWidth || 400;
+        const h = wheelEl.clientHeight || wheelEl.offsetHeight || 400;
+        const cx = w / 2;
+        const cy = h / 2;
+        const baseDist = Math.max(Math.min(cx, cy) - 60, 28);
+        const dist = separated ? baseDist + 12 : baseDist;
+
+        for(let i=0;i<n;i++){
+          const angleDeg = i*seg + seg/2; // middle of sector
+          const angleRad = (angleDeg - 90) * Math.PI / 180; // rotate so 0deg = top
+          const x = cx + Math.cos(angleRad) * dist;
+          const y = cy + Math.sin(angleRad) * dist;
+
+          const label = document.createElement('div');
+          label.className = 'sector-label';
+          label.textContent = list[i] || '';
+
+            // compute arc length and let label width fill sector
+            const arcLen = Math.max(60, Math.round(dist * (seg * Math.PI / 180)));
+            const textLen = Math.max(1, (list[i]||'').length);
+            // Improved font sizing: allow larger fonts for few items and scale down for many items
+            // base desired font roughly proportional to arc length and inversely to text length
+            let desiredFont = Math.round(arcLen / Math.max(3, textLen));
+            // scale up for small counts to make labels prominent
+            const countScale = Math.min(1.6, Math.max(0.7, 6 / Math.max(1, n)));
+            desiredFont = Math.round(desiredFont * countScale);
+            // clamp to sensible bounds
+            let fontByArc = Math.min(80, Math.max(12, desiredFont));
+            label.style.width = arcLen + 'px';
+            label.style.whiteSpace = 'nowrap';
+            label.style.fontSize = fontByArc + 'px';
+            // insert label so offsetWidth works
+            labelsContainer.appendChild(label);
+            // create hidden measurer to fit text to arc length
+            const meas = document.createElement('span');
+            meas.style.position = 'absolute'; meas.style.visibility = 'hidden'; meas.style.whiteSpace = 'nowrap';
+            meas.style.fontWeight = '800';
+            meas.textContent = label.textContent;
+            labelsContainer.appendChild(meas);
+            // decrement font until fits or reach minimum
+            let fw = fontByArc; let tries = 0;
+            meas.style.fontSize = fw + 'px';
+            while(meas.offsetWidth > arcLen && fw > 10 && tries < 30){
+              fw -= 1; meas.style.fontSize = fw + 'px'; tries++;
+            }
+            // if still too wide, allow wrapping into two lines and increase readability
+            if(meas.offsetWidth > arcLen){
+              label.style.whiteSpace = 'normal';
+              // choose smaller font for wrapped text
+              fw = Math.max(10, Math.round(fw * 0.9));
+            }
+            label.style.fontSize = fw + 'px';
+            // clean up measurer
+            labelsContainer.removeChild(meas);
+
+          // position at computed x,y and rotate along radius so label points outward
+          label.style.left = `${x}px`;
+          label.style.top = `${y}px`;
+          // rotate so text follows radius; flip when upside-down for readability
+          let rotateDeg = angleDeg;
+          if(rotateDeg > 90 && rotateDeg < 270) rotateDeg += 180;
+          label.style.transform = `translate(-50%,-50%) rotate(${rotateDeg}deg)`;
+          label.style.transformOrigin = 'center center';
+
+          // visibility tweaks
+          label.style.opacity = separated ? '1' : '0.85';
+          labelsContainer.appendChild(label);
+        }
+      }
+
+      function renderList(){
+        listEl.innerHTML = '';
+        members.forEach((m, i)=>{
+          const d = document.createElement('div'); d.className='item'; d.textContent = m;
+          d.style.cursor = 'pointer';
+          // click a list item to remove it
+          d.addEventListener('click', ()=>{
+            if(!confirm(`Xoá "${m}" khỏi vòng quay?`)) return;
+            members.splice(i,1);
+            renderList();
+          });
+          listEl.appendChild(d);
+        });
+        buildWheel(false, members);
+        if(members.length >= 2) alignWheelToIndex(1, members);
+        // update sidebar count
+        const totalEl = document.getElementById('countTotal'); if(totalEl) totalEl.textContent = members.length;
+      }
+
+      addBtn.addEventListener('click', ()=>{
+        const name = (memberInput.value||'').trim();
+        if(!name) return;
+        members.push(name);
+        renderList();
+        // split effect when typing/adding name
+        wheelEl.classList.add('split');
+        buildWheel(true, members);
+        setTimeout(()=>{ wheelEl.classList.remove('split'); buildWheel(false, members); if(members.length>=2) alignWheelToIndex(1,members); }, 350);
+        memberInput.value = '';
+        memberInput.focus();
+      });
+
+      // delete all names with confirmation
+      if(deleteBtn){
+        deleteBtn.addEventListener('click', ()=>{
+          if(!confirm('Bạn có chắc muốn xóa toàn bộ tên?')) return;
+          members = [];
+          renderList();
+          if(labelsContainer) labelsContainer.innerHTML = '';
+          const resultEl = document.getElementById('countResult'); if(resultEl) resultEl.textContent = spinsDone;
+        });
+      }
+
+      memberInput.addEventListener('input', ()=>{
+        // live preview while typing: rebuild wheel with a temporary list
+        if(!memberInput.value){
+          wheelEl.classList.remove('split');
+          buildWheel(false, members);
+          if(members.length>=2) alignWheelToIndex(1,members);
+          return;
+        }
+        wheelEl.classList.add('split');
+        const tempMembers = members.concat([memberInput.value.trim() || '']);
+        buildWheel(true, tempMembers);
+        if(tempMembers.length>=2) alignWheelToIndex(1,tempMembers);
+      });
+
+      function disableControls(flag){
+        spinLocked = !!flag;
+        [addBtn, memberInput, spinBtn, deleteBtn, shuffleBtn, sortBtn, spinSecondsInput].forEach(el=>{ if(el) el && (el.disabled = !!flag); });
+      }
+
+      function spinToIndex(targetIndex){
+        if(spinLocked) return; // prevent double
+        if(members.length === 0) return;
+        disableControls(true);
+        const n = members.length || 1;
+        const seg = 360 / n;
+        const targetAngle = (targetIndex * seg) + (seg/2);
+        const desired = 270 - targetAngle; // align sector under pointer
+        // compute rotation and duration from user input
+        const durationSec = Math.max(0.8, parseFloat(spinSecondsInput && spinSecondsInput.value) || 4);
+        const spins = Math.max(3, Math.round(durationSec)); // use duration to influence spins
+        const rotation = spins*360 + desired + (Math.random()*8-4); // tiny randomness
+        // apply inline transition with chosen duration (override CSS)
+        wheelEl.style.transition = `transform ${durationSec}s cubic-bezier(.12,.9,.28,1)`;
+        wheelEl.classList.add('spin-transition');
+        wheelEl.style.transform = `rotate(${rotation}deg)`;
+        // when animation ends (duration + small buffer)
+        setTimeout(()=>{
+          const final = (360 - (desired % 360)) % 360;
+          wheelEl.classList.remove('spin-transition');
+          // snap to final position with no transition to avoid jumpy motion
+          wheelEl.style.transition = '';
+          wheelEl.style.transform = `rotate(${final}deg)`;
+          // minor glow on wheel
+          wheelEl.classList.add('announce-glow');
+          // pointer announce + sound
+          pointer.classList.add('announce');
+          playPing();
+          // delay slightly to build suspense then show full modal
+          const suspenseDelay = 700; // ms
+          setTimeout(()=>{
+            pointer.classList.remove('announce');
+            wheelEl.classList.remove('announce-glow');
+            // show modal with winner
+            const winner = members[targetIndex] || '---';
+            spinsDone += 1;
+            const resultEl = document.getElementById('countResult'); if(resultEl) resultEl.textContent = spinsDone;
+            if(centerTitle) centerTitle.textContent = winner;
+            if(centerSubtitle) centerSubtitle.textContent = 'Người trúng';
+            modalWinner.textContent = winner;
+            modalBackdrop.style.display = 'flex';
+            // focus remove button for quick action
+            modalRemove.focus();
+            // remove or close handlers
+            modalRemove.onclick = ()=>{
+              // remove the winner from members and update
+              const idx = members.indexOf(winner);
+              if(idx !== -1){ members.splice(idx,1); renderList(); }
+              modalBackdrop.style.display='none';
+            };
+            modalClose.onclick = ()=>{ modalBackdrop.style.display='none'; };
+            disableControls(false);
+          }, 700);
+        }, Math.round(durationSec*1000) + 80);
+      }
+
+      function spinDefault(){
+        const targetIndex = (members.length >=2) ? 1 : 0;
+        spinToIndex(targetIndex);
+      }
+
+      // small sound using WebAudio for ping
+      function playPing(){
+        try{
+          const ctx = new (window.AudioContext || window.webkitAudioContext)();
+          const o = ctx.createOscillator();
+          const g = ctx.createGain();
+          o.type = 'sine';
+          o.frequency.value = 880;
+          g.gain.value = 0.0001;
+          o.connect(g); g.connect(ctx.destination);
+          const now = ctx.currentTime;
+          g.gain.setValueAtTime(0.0001, now);
+          g.gain.exponentialRampToValueAtTime(0.2, now + 0.01);
+          o.start(now);
+          g.gain.exponentialRampToValueAtTime(0.0001, now + 0.28);
+          o.stop(now + 0.3);
+        }catch(e){/* ignore on unsupported */}
+      }
+
+      // wire spin controls
+      spinBtn.addEventListener('click', spinDefault);
+      if(centerInner){ centerInner.style.cursor='pointer'; centerInner.addEventListener('click', spinDefault); }
+      if(resultBanner){ resultBanner.addEventListener('click', ()=>{ resultBanner.style.display='none'; }); }
+
+      // shuffle and sort
+      if(shuffleBtn) shuffleBtn.addEventListener('click', ()=>{ if(spinLocked) return; for(let i=members.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [members[i],members[j]]=[members[j],members[i]];} renderList(); });
+      if(sortBtn) sortBtn.addEventListener('click', ()=>{ if(spinLocked) return; members.sort((a,b)=>a.localeCompare(b,'vi')); renderList(); });
+
+      // initial render: wait for load so layout/CSS sizes are available
+      window.addEventListener('load', ()=>{
+        buildWheel(false, members);
+        // align to second person by default
+        if(members.length >= 2) alignWheelToIndex(1, members);
+        // run again shortly after to handle late layout changes
+        setTimeout(()=>{ buildWheel(false, members); if(members.length>=2) alignWheelToIndex(1,members); }, 120);
+      });
+      window.addEventListener('resize', ()=>{ buildWheel(false, members); if(members.length>=2) alignWheelToIndex(1,members); });
+    })();
+  </script>
+
+</body>
+</html>
